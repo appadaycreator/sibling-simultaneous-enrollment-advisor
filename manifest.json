@@ -1,0 +1,8 @@
+{
+  "name": "Sibling Simultaneous Enrollment Advisor",
+  "short_name": "sibling-simu",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1"
+}
