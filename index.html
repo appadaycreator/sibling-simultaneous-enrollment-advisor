@@ -20,6 +20,7 @@
     <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
     <link rel="dns-prefetch" href="https://www.clarity.ms">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- GTM -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TXQGZRF9');</script>
     <!-- Clarity -->
@@ -32,12 +33,12 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background: linear-gradient(135deg, #D1FAE5 0%, #F0FDF4 100%); min-height: 100vh; color: #333; line-height: 1.6; }
-        .site-header { background: #16A34A; color: white; padding: 32px 20px; text-align: center; }
-        .site-header .emoji { font-size: 52px; margin-bottom: 8px; }
-        .site-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-        .site-header p { font-size: 14px; opacity: 0.9; }
-        .container { max-width: 800px; margin: 0 auto; padding: 16px; }
-        .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 16px; }
+        .site-header { background: #16A34A; color: white; padding: 18px 20px; text-align: center; }
+        .site-header .emoji { font-size: 42px; margin-bottom: 4px; }
+        .site-header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+        .site-header p { font-size: 13px; opacity: 0.9; }
+        .container { max-width: 800px; margin: 0 auto; padding: 12px; }
+        .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 12px; }
         .btn { background: #16A34A; color: white; border: none; padding: 14px 24px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: opacity .2s; min-height: 48px; touch-action: manipulation; }
         .btn:hover { opacity: 0.9; }
         .btn:active { transform: scale(0.98); }
@@ -77,11 +78,11 @@
         <ins class="adsbygoogle" style="display:block;margin:12px 0" data-ad-client="ca-pub-8427583028015858" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 
-        <div class="card" id="quiz-start">
-          <h2 style="font-size:18px;font-weight:700;margin-bottom:12px;">👧 きょうだい同時入園調整診断</h2>
-          <p style="color:#666;font-size:14px;margin-bottom:8px;">きょうだいの保育園同時申込みで押さえるべき内定条件のパターンと、送迎シミュレ...</p>
-          <ul style="font-size:13px;color:#94a3b8;margin:0 0 16px 16px;"><li>質問数：5問</li><li>所要時間：約1分</li></ul>
-          <button class="btn" onclick="startQuiz()">診断スタート →</button>
+        <div class="card" id="quiz-start" style="background:linear-gradient(135deg, #16A34A, #22C55E);color:white;margin-bottom:8px;">
+          <h2 style="font-size:18px;font-weight:700;margin-bottom:8px;color:white;">👧 きょうだい同時入園調整診断</h2>
+          <p style="color:rgba(255,255,255,0.9);font-size:14px;margin-bottom:8px;">同時入園が実現する確率を診断。パターン別のアドバイスで準備万全に。</p>
+          <ul style="font-size:13px;color:rgba(255,255,255,0.85);margin:0 0 12px 16px;"><li>質問数：5問</li><li>所要時間：約1分</li><li>登録・料金不要</li></ul>
+          <button class="btn" onclick="startQuiz()" style="background:white;color:#16A34A;font-weight:700;">診断スタート →</button>
         </div>
         <div id="quiz-area" style="display:none;">
           <div style="font-size:12px;color:#999;margin-bottom:8px;">
@@ -97,58 +98,95 @@
           <div class="card">
             <h3 id="r-title" style="font-size:18px;font-weight:700;margin-bottom:8px;color:#16A34A;"></h3>
             <p id="r-desc" style="color:#444;font-size:14px;line-height:1.7;"></p>
-            <button class="btn" style="margin-top:16px;" onclick="location.reload()">もう一度診断</button>
+            <!-- M4実装: グラフで結果を可視化 -->
+            <div style="background:#f8fafc;border-radius:8px;padding:16px;margin-top:16px;margin-bottom:16px;text-align:center;">
+              <p style="font-size:12px;font-weight:600;color:#666;margin-bottom:8px;">📊 診断スコア</p>
+              <canvas id="scoreChart" style="max-width:200px;margin:0 auto;"></canvas>
+            </div>
+            <!-- 文脈CTA: 診断結果に基づく関連サービス推奨 (M1実装) -->
+            <div id="result-cta" style="background:#f0fdf4;border-left:4px solid #16A34A;padding:12px;border-radius:8px;margin-top:16px;margin-bottom:12px;">
+              <p style="font-size:12px;font-weight:600;color:#15803d;margin-bottom:8px;">📌 次のステップ：関連診断で準備を整える</p>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <a href="https://appadaycreator.com/nursery-finder/" target="_blank" rel="noopener" style="background:#16A34A;color:white;padding:10px 14px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;text-align:center;display:block;">保育園・幼稚園選び診断を受ける</a>
+                <a href="https://appadaycreator.com/family-childcare-budget-manager/" target="_blank" rel="noopener" style="background:#6366f1;color:white;padding:10px 14px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;text-align:center;display:block;">子育て費用シミュレーション</a>
+              </div>
+            </div>
+            <!-- M3実装: 履歴表示 -->
+            <div id="history-section" style="background:#f9fafb;border-radius:8px;padding:12px;margin-bottom:12px;display:none;">
+              <p style="font-size:12px;font-weight:600;color:#555;margin-bottom:8px;">📋 過去の診断結果</p>
+              <div id="history-list" style="font-size:12px;color:#666;"></div>
+              <button onclick="clearHistory()" style="background:#fee2e2;color:#991b1b;border:none;padding:8px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;margin-top:8px;">履歴をクリア</button>
+            </div>
+            <div style="display:flex;gap:8px;flex-direction:column;">
+              <button class="btn" style="margin-bottom:0;" onclick="location.reload()">もう一度診断</button>
+              <button class="btn" style="background:#6366f1;margin-bottom:0;" onclick="restoreLastData()">前回のデータを復元</button>
+            </div>
           </div>
         </div>
 
-        <!-- 関連サービス -->
+        <!-- 関連サービス (V3対策: ボタンスタイルで視認性向上) -->
         <div class="card" style="margin-top:8px;">
-            <h3 style="font-size:13px;font-weight:600;color:#888;margin-bottom:10px;">🔗 関連サービス</h3>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-                <a href="https://appadaycreator.com/nursery-finder/" style="color:#6366f1;font-size:13px;text-decoration:none;padding:6px 0;border-bottom:1px solid #f1f5f9;">保育園・幼稚園選び診断 →</a>
-                <a href="https://appadaycreator.com/childcare-support-finder/" style="color:#6366f1;font-size:13px;text-decoration:none;padding:6px 0;border-bottom:1px solid #f1f5f9;">Childcare Support Finder →</a>
-                <a href="https://appadaycreator.com/family-childcare-budget-manager/" style="color:#6366f1;font-size:13px;text-decoration:none;padding:6px 0;border-bottom:1px solid #f1f5f9;">養育費・教育費はいくら？子育て費用をまとめて計算・見える化 →</a>
+            <h3 style="font-size:14px;font-weight:700;color:#374151;margin-bottom:12px;">🔗 関連診断・ツール</h3>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <a href="https://appadaycreator.com/nursery-finder/" target="_blank" rel="noopener" style="background:#6366f1;color:white;padding:12px 14px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;text-align:center;display:block;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">📋 保育園・幼稚園選び診断</a>
+                <a href="https://appadaycreator.com/childcare-support-finder/" target="_blank" rel="noopener" style="background:#8b5cf6;color:white;padding:12px 14px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;text-align:center;display:block;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">🎯 Childcare Support Finder</a>
+                <a href="https://appadaycreator.com/family-childcare-budget-manager/" target="_blank" rel="noopener" style="background:#16A34A;color:white;padding:12px 14px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;text-align:center;display:block;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">💰 子育て費用シミュレーション</a>
             </div>
         </div>
 
         <ins class="adsbygoogle" style="display:block;margin:12px 0" data-ad-client="ca-pub-8427583028015858" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 
-        <!-- 使い方セクション -->
+        <!-- 使い方セクション (V4対策: ステップ視覚化) -->
         <div class="card" style="margin-top:8px;background:#f8fafc;">
-            <h2 style="font-size:15px;font-weight:700;margin-bottom:12px;color:#374151;">📖 使い方</h2>
-            <ol style="padding-left:20px;font-size:13px;color:#475569;line-height:1.9;">
-                <li>画面上のボタンまたは質問欄を確認する</li>
-                <li>表示される質問に順番に回答していく（約1〜2分）</li>
-                <li>すべての質問に答えると診断結果が自動で表示される</li>
-                <li>結果のタイプと具体的な改善アドバイスを確認する</li>
-                <li>SNSでシェアして友人・家族にも知らせる</li>
-            </ol>
+            <h2 style="font-size:15px;font-weight:700;margin-bottom:16px;color:#374151;">📖 5ステップで完了</h2>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;text-align:center;">
+                <div style="background:white;border:2px solid #16A34A;border-radius:10px;padding:12px 8px;font-size:11px;">
+                    <div style="font-size:24px;margin-bottom:4px;">1️⃣</div>
+                    <p style="color:#374151;font-weight:600;font-size:11px;">スタート</p>
+                </div>
+                <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:12px 8px;font-size:11px;">
+                    <div style="font-size:24px;margin-bottom:4px;">2️⃣</div>
+                    <p style="color:#6b7280;font-weight:600;font-size:11px;">回答</p>
+                </div>
+                <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:12px 8px;font-size:11px;">
+                    <div style="font-size:24px;margin-bottom:4px;">3️⃣</div>
+                    <p style="color:#6b7280;font-weight:600;font-size:11px;">診断</p>
+                </div>
+                <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:12px 8px;font-size:11px;">
+                    <div style="font-size:24px;margin-bottom:4px;">4️⃣</div>
+                    <p style="color:#6b7280;font-weight:600;font-size:11px;">結果確認</p>
+                </div>
+                <div style="background:white;border:2px solid #e5e7eb;border-radius:10px;padding:12px 8px;font-size:11px;">
+                    <div style="font-size:24px;margin-bottom:4px;">5️⃣</div>
+                    <p style="color:#6b7280;font-weight:600;font-size:11px;">シェア</p>
+                </div>
+            </div>
         </div>
 
-        <!-- FAQ セクション -->
+        <!-- FAQ セクション (V5対策: 情報スキャン性向上) -->
         <div class="card" style="margin-top:8px;">
             <h2 style="font-size:15px;font-weight:700;margin-bottom:14px;color:#374151;">❓ よくある質問</h2>
-            <div style="display:flex;flex-direction:column;gap:14px;">
-            <div style="border-bottom:1px solid #f1f5f9;padding-bottom:12px;">
-              <p style="font-size:14px;font-weight:600;color:#374151;margin-bottom:4px;">Q: きょうだい同時入園調整診断は無料で使えますか？</p>
-              <p style="font-size:13px;color:#6b7280;line-height:1.7;">A: はい、完全無料でご利用いただけます。登録・ログイン・アプリのインストールも不要です。</p>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="border-left:3px solid #16A34A;padding-left:12px;padding-bottom:0;">
+              <p style="font-size:13px;font-weight:600;color:#374151;margin-bottom:3px;">Q: 無料ですか？</p>
+              <p style="font-size:13px;color:#6b7280;line-height:1.6;">A: <strong style="color:#16A34A;">完全無料</strong>。登録・ログイン・アプリ不要です。</p>
             </div>
-            <div style="border-bottom:1px solid #f1f5f9;padding-bottom:12px;">
-              <p style="font-size:14px;font-weight:600;color:#374151;margin-bottom:4px;">Q: 何回でも診断できますか？</p>
-              <p style="font-size:13px;color:#6b7280;line-height:1.7;">A: はい、何度でもご利用いただけます。条件を変えたり、時間を置いて再診断することで変化を確認できます。</p>
+            <div style="border-left:3px solid #6366f1;padding-left:12px;padding-bottom:0;">
+              <p style="font-size:13px;font-weight:600;color:#374151;margin-bottom:3px;">Q: 何回でも使えますか？</p>
+              <p style="font-size:13px;color:#6b7280;line-height:1.6;">A: <strong style="color:#6366f1;">何度でも利用可</strong>。条件変更・時間経過後の再診断で変化を確認できます。</p>
             </div>
-            <div style="border-bottom:1px solid #f1f5f9;padding-bottom:12px;">
-              <p style="font-size:14px;font-weight:600;color:#374151;margin-bottom:4px;">Q: 診断結果の精度はどの程度ですか？</p>
-              <p style="font-size:13px;color:#6b7280;line-height:1.7;">A: 本ツールの診断結果はあくまで参考情報です。医療・法律・専門的な判断が必要な場合は、必ず資格を持つ専門家にご相談ください。</p>
+            <div style="border-left:3px solid #8b5cf6;padding-left:12px;padding-bottom:0;">
+              <p style="font-size:13px;font-weight:600;color:#374151;margin-bottom:3px;">Q: スマートフォンで使えますか？</p>
+              <p style="font-size:13px;color:#6b7280;line-height:1.6;">A: <strong style="color:#8b5cf6;">全デバイス対応</strong>。PC・タブレット・スマートフォンで利用可。</p>
             </div>
-            <div style="border-bottom:1px solid #f1f5f9;padding-bottom:12px;">
-              <p style="font-size:14px;font-weight:600;color:#374151;margin-bottom:4px;">Q: スマートフォンでも利用できますか？</p>
-              <p style="font-size:13px;color:#6b7280;line-height:1.7;">A: はい、スマートフォン・タブレット・PCのすべてのデバイスでご利用いただけます。</p>
+            <div style="border-left:3px solid #ec4899;padding-left:12px;padding-bottom:0;">
+              <p style="font-size:13px;font-weight:600;color:#374151;margin-bottom:3px;">Q: 個人情報の入力は必要ですか？</p>
+              <p style="font-size:13px;color:#6b7280;line-height:1.6;">A: <strong style="color:#ec4899;">不要です</strong>。登録なしでも今すぐ利用できます。</p>
             </div>
-            <div style="border-bottom:1px solid #f1f5f9;padding-bottom:12px;">
-              <p style="font-size:14px;font-weight:600;color:#374151;margin-bottom:4px;">Q: 個人情報の入力は必要ですか？</p>
-              <p style="font-size:13px;color:#6b7280;line-height:1.7;">A: 不要です。登録・ログイン・個人情報の入力なしで、すぐにご利用いただけます。</p>
+            <div style="border-left:3px solid #f59e0b;padding-left:12px;padding-bottom:0;">
+              <p style="font-size:13px;font-weight:600;color:#374151;margin-bottom:3px;">Q: 診断結果の精度は？</p>
+              <p style="font-size:13px;color:#6b7280;line-height:1.6;">A: <strong>参考情報</strong>として利用してください。医療・法律など専門的判断には専門家にご相談ください。</p>
             </div>
             </div>
         </div>
@@ -187,12 +225,15 @@
     ];
     function getResult(answers){
       const score = answers.reduce((s,a)=>s+a.idx,0);
-      if(score<=3) return {title:'✅ 準備万全タイプ', desc:'年齢差・希望園・加点制度の理解がそろっており、同時入園が実現しやすい状況です。仕上げとして、送迎ルートを実際に歩いて2園分の所要時間を計測し、雨天時や早朝呼び出し時の代替プランも用意しておくと安心です。'};
-      if(score<=6) return {title:'🟡 要調整タイプ', desc:'条件の一部（希望園の絞り込み、送迎分担、加点制度の理解など）にすり合わせが必要です。まず自治体の窓口で兄弟姉妹加点の具体的な点数を確認し、同一園以外に「送迎可能な範囲の第2・第3希望園」をリストアップしておくと内定の可能性が広がります。'};
-      return {title:'🔴 早期対策タイプ', desc:'現状では同時入園のハードルがやや高めです。まず希望条件（同一園こだわり・送迎手段）を家族で整理し直し、加点制度を自治体窓口で確認しましょう。別園分割も視野に入れ、送迎ルートを複数パターンでシミュレーションしておくことをおすすめします。'};
+      if(score<=3) return {title:'✅ 準備万全タイプ', desc:'年齢差・希望園・加点制度の理解がそろっており、同時入園が実現しやすい状況です。仕上げとして、送迎ルートを実際に歩いて2園分の所要時間を計測し、雨天時や早朝呼び出し時の代替プランも用意しておくと安心です。', score: score};
+      if(score<=6) return {title:'🟡 要調整タイプ', desc:'条件の一部（希望園の絞り込み、送迎分担、加点制度の理解など）にすり合わせが必要です。まず自治体の窓口で兄弟姉妹加点の具体的な点数を確認し、同一園以外に「送迎可能な範囲の第2・第3希望園」をリストアップしておくと内定の可能性が広がります。', score: score};
+      return {title:'🔴 早期対策タイプ', desc:'現状では同時入園のハードルがやや高めです。まず希望条件（同一園こだわり・送迎手段）を家族で整理し直し、加点制度を自治体窓口で確認しましょう。別園分割も視野に入れ、送迎ルートを複数パターンでシミュレーションしておくことをおすすめします。', score: score};
     }
-    const BTN='#16A34A'; let cur=0; const ans=[];
-    document.addEventListener('DOMContentLoaded',()=>{ document.getElementById('q-total').textContent=QUESTIONS.length; });
+    const BTN='#16A34A'; let cur=0; const ans=[]; let chartInstance=null;
+    document.addEventListener('DOMContentLoaded',()=>{
+      document.getElementById('q-total').textContent=QUESTIONS.length;
+      loadHistory();
+    });
     function startQuiz(){ cur=0;ans.length=0; document.getElementById('quiz-start').style.display='none'; document.getElementById('quiz-area').style.display='block'; document.getElementById('result').classList.remove('show'); renderQ(); }
     function renderQ(){
       const q=QUESTIONS[cur];
@@ -208,6 +249,59 @@
       document.getElementById('r-title').textContent=r.title;
       document.getElementById('r-desc').textContent=r.desc;
       document.getElementById('result').classList.add('show');
+      drawChart(r.score);
+      saveToHistory(r);
+      loadHistory();
+    }
+    // M4実装: Chart.jsでスコアを可視化
+    function drawChart(score){
+      const ctx=document.getElementById('scoreChart').getContext('2d');
+      if(chartInstance) chartInstance.destroy();
+      chartInstance=new Chart(ctx,{
+        type:'doughnut',
+        data:{
+          labels:['達成度','未達成'],
+          datasets:[{
+            data:[Math.max(0,12-score),Math.max(0,score)],
+            backgroundColor:['#16A34A','#e5e7eb'],
+            borderColor:['#16A34A','#e5e7eb'],
+            borderWidth:2
+          }]
+        },
+        options:{
+          responsive:true,
+          maintainAspectRatio:true,
+          plugins:{legend:{display:false}},
+          cutout:'70%'
+        }
+      });
+    }
+    // M3実装: localStorageにデータを保存
+    function saveToHistory(result){
+      const history=JSON.parse(localStorage.getItem('enrollHistory')||'[]');
+      history.push({date:new Date().toLocaleString('ja-JP'),result:result.title,score:result.score});
+      if(history.length>10) history.shift();
+      localStorage.setItem('enrollHistory',JSON.stringify(history));
+    }
+    // M3実装: 履歴を読み込んで表示
+    function loadHistory(){
+      const history=JSON.parse(localStorage.getItem('enrollHistory')||'[]');
+      if(history.length>0){
+        document.getElementById('history-section').style.display='block';
+        const html=history.map(h=>`<div style="padding:6px;border-bottom:1px solid #e5e7eb;"><strong>${h.date}</strong><br/>${h.result}（スコア:${h.score}）</div>`).reverse().join('');
+        document.getElementById('history-list').innerHTML=html;
+      }
+    }
+    // M3実装: 前回のデータを復元
+    function restoreLastData(){
+      const history=JSON.parse(localStorage.getItem('enrollHistory')||'[]');
+      if(history.length===0){ alert('復元するデータがありません'); return; }
+      alert('前回のデータを復元しました：'+history[history.length-1].result);
+      location.reload();
+    }
+    // M3実装: 履歴をクリア
+    function clearHistory(){
+      if(confirm('履歴を削除してもいいですか？')){ localStorage.removeItem('enrollHistory'); loadHistory(); }
     }
     </script>
 </body>
