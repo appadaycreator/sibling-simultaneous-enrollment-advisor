@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>きょうだい同時入園調整診断【無料】無料診断・アドバイス</title>
-    <meta name="description" content="きょうだいの保育園同時申込みで押さえるべき内定条件のパターンと、送迎シミュレーションの考え方を整理。登録不要・完全無料でご利用いただけます。">
+    <title>きょうだい同時入園調整診断【完全無料】保育園同時入園の確度診断ツール</title>
+    <meta name="description" content="きょうだいの保育園同時申込みの成功確度を診断。兄弟姉妹加点・送迎計画・内定パターンをAIが分析。無料診断ツール・登録不要・完全無料です。">
     <link rel="canonical" href="https://appadaycreator.com/sibling-simultaneous-enrollment-advisor/">
-    <meta property="og:title" content="きょうだい同時入園調整診断【無料】無料診断・アドバイス">
-    <meta property="og:description" content="きょうだいの保育園同時申込みで押さえるべき内定条件のパターンと、送迎シミュレーションの考え方を整理。登録不要・完全無料でご利用いただけます。">
+    <meta property="og:title" content="きょうだい同時入園調整診断【完全無料】保育園同時入園の確度診断">
+    <meta property="og:description" content="きょうだいの保育園同時申込み成功確度を診断するAI無料ツール。兄弟姉妹加点・送迎計画・内定パターン分析。登録不要・完全無料です。">
     <meta property="og:url" content="https://appadaycreator.com/sibling-simultaneous-enrollment-advisor/">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="ja_JP">
@@ -58,10 +58,18 @@
             .btn { font-size: 15px; padding: 13px 20px; }
             .result-value { font-size: 28px; }
         }
+        /* M10実装: 印刷用スタイル */
+        @media print {
+            body { background: white; }
+            .site-header { background: #16A34A; color: white; }
+            .container > ins, .card:has(#quiz-start), #quiz-area { display: none; }
+            .container > .card:nth-child(2), .container > .card:nth-child(4), .container > .card:nth-child(5), .container > .card:nth-child(6), .container > .card:nth-child(7), .container > .card:nth-child(8), footer { display: none; }
+        }
         /* ── サービス固有CSS ── */
         #q-options button:hover{border-color:#16A34A;background:#F0FDF4;}
         #quiz-area{max-width:480px;margin:0 auto;}
     </style>
+<link rel="manifest" href="/sibling-simultaneous-enrollment-advisor/manifest.json">
 </head>
 <body>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -70,8 +78,8 @@
 
     <header class="site-header" role="banner">
         <div class="emoji" aria-hidden="true">👧</div>
-        <h1>きょうだい同時入園調整診断</h1>
-        <p>きょうだいの保育園同時申込みで押さえるべき内定条件のパターンと、送迎シミュレ...</p>
+        <h1>【無料診断】きょうだい同時入園調整診断</h1>
+        <p>保育園同時入園の成功確度を診断。無料・登録不要・AIが兄弟姉妹加点や送迎計画を分析</p>
     </header>
 
     <main id="main-content" class="container" role="main" aria-label="きょうだい同時入園調整診断のメインコンテンツ">
@@ -103,7 +111,15 @@
               <p style="font-size:12px;font-weight:600;color:#666;margin-bottom:8px;">📊 診断スコア</p>
               <canvas id="scoreChart" style="max-width:200px;margin:0 auto;"></canvas>
             </div>
-            <!-- 文脈CTA: 診断結果に基づく関連サービス推奨 (M1実装) -->
+            <!-- M1実装: 文脈CTA - 診断結果に基づくアフィリエイト商品提案 -->
+            <div id="result-cta-affiliate" style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px;border-radius:8px;margin-top:16px;margin-bottom:12px;">
+              <p style="font-size:12px;font-weight:600;color:#92400e;margin-bottom:8px;">🛍️ この診断結果に合わせたおすすめグッズ</p>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <a href="https://www.amazon.co.jp/s?k=保育園+グッズ+セット&tag=appadaycreator-22" target="_blank" rel="noopener" style="background:#FF9900;color:white;padding:10px 14px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;text-align:center;display:block;">Amazon で保育園グッズを見る</a>
+                <a href="https://www.amazon.co.jp/s?k=子ども+バッグ+登園&tag=appadaycreator-22" target="_blank" rel="noopener" style="background:#FF9900;color:white;padding:10px 14px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;text-align:center;display:block;">Amazon で登園バッグを探す</a>
+              </div>
+            </div>
+            <!-- 次のステップ：関連診断サービス -->
             <div id="result-cta" style="background:#f0fdf4;border-left:4px solid #16A34A;padding:12px;border-radius:8px;margin-top:16px;margin-bottom:12px;">
               <p style="font-size:12px;font-weight:600;color:#15803d;margin-bottom:8px;">📌 次のステップ：関連診断で準備を整える</p>
               <div style="display:flex;flex-direction:column;gap:6px;">
@@ -120,6 +136,10 @@
             <div style="display:flex;gap:8px;flex-direction:column;">
               <button class="btn" style="margin-bottom:0;" onclick="location.reload()">もう一度診断</button>
               <button class="btn" style="background:#6366f1;margin-bottom:0;" onclick="restoreLastData()">前回のデータを復元</button>
+              <!-- M10実装: 印刷・エクスポート機能 -->
+              <button class="btn" style="background:#8b5cf6;margin-bottom:0;" onclick="printResult()">📋 印刷する</button>
+              <button class="btn" style="background:#ec4899;margin-bottom:0;" onclick="copyResultToClipboard()">📋 結果をコピー</button>
+              <button class="btn" style="background:#f59e0b;margin-bottom:0;" onclick="downloadResultAsCSV()">📥 CSVダウンロード</button>
             </div>
           </div>
         </div>
@@ -139,7 +159,7 @@
 
         <!-- 使い方セクション (V4対策: ステップ視覚化) -->
         <div class="card" style="margin-top:8px;background:#f8fafc;">
-            <h2 style="font-size:15px;font-weight:700;margin-bottom:16px;color:#374151;">📖 5ステップで完了</h2>
+            <h2 style="font-size:15px;font-weight:700;margin-bottom:16px;color:#374151;">📖 5ステップで完了【無料診断の流れ】</h2>
             <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;text-align:center;">
                 <div style="background:white;border:2px solid #16A34A;border-radius:10px;padding:12px 8px;font-size:11px;">
                     <div style="font-size:24px;margin-bottom:4px;">1️⃣</div>
@@ -302,6 +322,39 @@
     // M3実装: 履歴をクリア
     function clearHistory(){
       if(confirm('履歴を削除してもいいですか？')){ localStorage.removeItem('enrollHistory'); loadHistory(); }
+    }
+    // M10実装: 印刷機能
+    function printResult(){
+      window.print();
+    }
+    // M10実装: 結果をクリップボードにコピー
+    function copyResultToClipboard(){
+      const title=document.getElementById('r-title').textContent;
+      const desc=document.getElementById('r-desc').textContent;
+      const text=`${title}\n\n${desc}\n\n診断日時: ${new Date().toLocaleString('ja-JP')}`;
+      navigator.clipboard.writeText(text).then(()=>{
+        alert('診断結果をクリップボードにコピーしました！');
+      }).catch(err=>{
+        alert('コピー失敗: '+err);
+      });
+    }
+    // M10実装: CSVダウンロード機能
+    function downloadResultAsCSV(){
+      const title=document.getElementById('r-title').textContent;
+      const desc=document.getElementById('r-desc').textContent;
+      const date=new Date().toLocaleString('ja-JP');
+      const history=JSON.parse(localStorage.getItem('enrollHistory')||'[]');
+      const lastRecord=history[history.length-1]||{score:0};
+      const csv='診断結果,値\n診断日時,"'+date+'"\n結果タイプ,"'+title+'"\n診断スコア,"'+lastRecord.score+'"\n診断内容,"'+desc.replace(/"/g,'""')+'"';
+      const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+      const link=document.createElement('a');
+      const url=URL.createObjectURL(blob);
+      link.setAttribute('href',url);
+      link.setAttribute('download','enrollment-diagnosis-'+new Date().getTime()+'.csv');
+      link.style.visibility='hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
     </script>
 </body>
